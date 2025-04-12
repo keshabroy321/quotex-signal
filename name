@@ -1,0 +1,43 @@
+import React, { useState } from "react"; import { Card, CardContent } from "@/components/ui/card"; import { Button } from "@/components/ui/button"; import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
+
+const markets = [ "EUR/USD", "GBP/USD", "USD/BDT OTC", "USD/INR OTC", "AUD/JPY", "BTC/USD", ];
+
+export default function QuotexSignalApp() { const [selectedMarket, setSelectedMarket] = useState("EUR/USD"); const [signal, setSignal] = useState(""); const [loading, setLoading] = useState(false);
+
+const generateSignal = () => { setLoading(true); // ডেমো সিগনাল লজিক (পরবর্তীতে রিয়েল টাইম API দিয়ে বদলানো হবে) setTimeout(() => { const signals = ["CALL (Buy)", "PUT (Sell)"]; const randomSignal = signals[Math.floor(Math.random() * signals.length)]; setSignal(randomSignal); setLoading(false); }, 1000); };
+
+return ( <div className="min-h-screen bg-gray-100 p-4"> <h1 className="text-2xl font-bold mb-4">Quotex 1-Minute Signal Bot</h1>
+
+<Card className="mb-4">
+    <CardContent className="p-4">
+      <Select onValueChange={setSelectedMarket} defaultValue={selectedMarket}>
+        <SelectTrigger className="w-full">
+          <span>{selectedMarket}</span>
+        </SelectTrigger>
+        <SelectContent>
+          {markets.map((market) => (
+            <SelectItem key={market} value={market}>
+              {market}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <Button onClick={generateSignal} className="mt-4 w-full" disabled={loading}>
+        {loading ? "Analyzing..." : "Get Signal"}
+      </Button>
+    </CardContent>
+  </Card>
+
+  {signal && (
+    <Card>
+      <CardContent className="p-4">
+        <p className="text-xl font-semibold">
+          Market: {selectedMarket}
+        </p>
+        <p className="text-green-600 text-2xl mt-2">Signal: {signal}</p>
+      </CardContent>
+    </Card>
+  )}
+</div>
+
+); }
